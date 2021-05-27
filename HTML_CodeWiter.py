@@ -24,27 +24,54 @@ def translateTo_Code(message):
             code+="<!DOCTYPE HTML>"
     elif 'open' in message :
         
-        message=cleaning(message)
+        message=cleaningFromOpenClose(message)
+        message=checkWordsException(message)
         code+="<"
         code+=message
         code+=">"
         
     elif 'meta' in message :
         code="<META charset='UTF-8'>"
+    elif 'do' in message :
+        message=cleaningFromWrite(message)
+        return(message,False)
     elif 'close ' in message :
-        message=cleaning(message)
+        message=cleaningFromOpenClose(message)
+        message=checkWordsException(message)
         code+="</"
         code+=message
         code+=">"
-    elif 'write' in message :
-        message.replace("write","")
-        return(message,False) 
+     
     elif 'quit' in message:
         quit()
-    
+    else :
+         message=checkWordsException(message)
+         translateTo_Code(message)
+          
     return(code,True)
 
-def cleaning(message):
+def checkWordsException(message):
+    splitedList=message.split()
+    for i in range(len(splitedList)):
+        if splitedList[i]=="Lowe's" :
+            splitedList[i]="close"
+        elif splitedList[i].lower()=="buddy":
+            splitedList[i]="BODY" 
+        elif splitedList[i].lower()=="right" :
+            splitedList[i]="write" 
+    message=splitedList[i].join(" ")
+    
+    return message
+
+def cleaningFromWrite(message):
+    newMessage=""
+    for i,e in enumerate(message.split()):
+        if e!="do" and i>=1 :
+            newMessage+=e
+            newMessage+=" "
+    return(newMessage)
+
+def cleaningFromOpenClose(message):
     
     for e in message.split():
         if e!="open" and e!= "close":
@@ -54,16 +81,24 @@ def cleaning(message):
 
 baliseListe=["<HTML>","</HTML>","<META charset='UTF-8'>","<!DOCTYPE HTML>","<HEAD>", "</HEAD>","<TITLE>","</TITLE>","<BODY>","</BODY>","<P>","</P>","<H1>","</H1>","<H2>","</H2>","<H3>","</H3>","<H4>","</H4>","<B>","</B>","<MAIN>","</MAIN>","<SECTION>","</SECTION>","<ARTICLE>","</ARTICLE>","<ASIDE>","</ASIDE>","<HEADER>","</HEADER>","<FOOTER>","</FOOTER>"]
 tabulation=""
+speak("Welcome to HTML CodeWriter")
+speak("Start coding")
 while(True) : 
     message=takeCommande()
     code=""
     if message=="quit" :
         break
     code,b=translateTo_Code(message)
+    
     if code not in baliseListe  and b:
         speak("Error recognizing try again")
         print(code)
     else :
+        if code.__contains__("/"):
+            speak("closed")
+        else :
+            if code.__contains__("<") :
+                 speak("opened")
         f=open("test.html","a")
         f.write(code)
         tabulation+="\t"
