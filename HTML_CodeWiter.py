@@ -1,5 +1,6 @@
 import speech_recognition as sr
 import pyttsx3
+import pyautogui
 r=sr.Recognizer()
 
 #################################################################
@@ -45,6 +46,7 @@ def translateTo_Code(message):
     
     if 'document type' in message:
             code+="<!DOCTYPE HTML>"
+            return(code,True)
     elif 'open' in message :
         
         
@@ -55,7 +57,7 @@ def translateTo_Code(message):
         code+=message
         code+=">"
         print("Open process :"+code)
-        
+        return(code,True)
        
         
     elif 'meta' in message:
@@ -71,6 +73,7 @@ def translateTo_Code(message):
         code+=message
         code+=">"
         print("this is close process "+code)
+        return(code,True)
         
      
     elif 'quit' in message:
@@ -83,9 +86,9 @@ def translateTo_Code(message):
              speak("there is no command recognized ")
              message=takeCommande()
          
-         translateTo_Code(message)
+         return (translateTo_Code(message))
           
-    return(code,True)
+    
 
 
 #################################################################
@@ -104,7 +107,7 @@ def checkWordsException(message):
             splitedList[i]="close"
         elif splitedList[i].lower() in ["buddy","budgie","bundy"]:
             splitedList[i]="body" 
-        elif splitedList[i].lower()=="right" :
+        elif splitedList[i].lower() in ["right","ride"] :
             splitedList[i]="write" 
         elif splitedList[i].lower()=="metal":
             splitedList[i]="meta"
@@ -186,7 +189,7 @@ while(True) :
     if message=="quit" :
         break
 
-    (code,b)=translateTo_Code(message)
+    code,b=translateTo_Code(message)
     checkElement=checkElements(code)
     if checkElement  and b:
          

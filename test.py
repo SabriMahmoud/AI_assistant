@@ -1,3 +1,6 @@
+import pyautogui
+import keyboard
+
 def checkWordsException(message):
     splitedList=message.split()
    
@@ -31,4 +34,13 @@ def checkElements(code):
         element=code[1:len(code)-1]
     return(element in ["head"])
 baliseListe=["<html>","</html>","<META charset='UTF-8'>","<!DOCTYPE HTML>","<head>", "</head>","<title>","</title>","<body>","</body>","<p>","</p>","<h1>","</h1>","<h2>","</h2>","<H3>","</H3>","<H4>","</H4>","<b>","</b>","<main>","</main>","<section>","</section>","<article>","</article>","<aside>","</aside>","<header>","</header>","<footer>","</footer>"]
-print(checkElements("</head>"))
+
+f=open("test.html","a")
+f.write("<html")
+f.write(str(chr(28))+">"+str(chr(10)))
+
+
+
+
+
+f.close()
